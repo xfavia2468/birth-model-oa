@@ -1,6 +1,7 @@
 Project is set up with a Django REST framework backend and a js Vite React frontend.
 
-Backend Setup (from project root):
+**Backend Setup (from project root):**
+
     1. Create/Activate the venv
         cd backend
         python3 -m venv venv
@@ -17,15 +18,28 @@ Backend Setup (from project root):
     4. Run Backend Server
         python manage.py runserver
         (http://127.0.0.1:8000/api/hello)
-        (api endpoints at... none yet)
 
     !! React dev server uses proxy in vite.config.js to forward /api requests to Django backend.
     !! If you change the backend port, the proxy in frontend/vite.config.js must be changed.
 
-Frontend Setup: 
+**Frontend Setup:**
+
     1. Install node
         cd frontend
         npm install
 
     2. Run Frontend Server
         (http://localhost:5173/)
+
+**API ENDPOINTS**
+| Action                                  | Method | Endpoint                          | Description                                                                 |
+|----------------------------------------|--------|----------------------------------|-----------------------------------------------------------------------------|
+| List all patients                        | GET    | `/api/patients/`                  | Returns all patients with nested medications                                |
+| Create a new patient                      | POST   | `/api/patients/`                  | Create a patient and optionally include medications                         |
+| Retrieve a patient                        | GET    | `/api/patients/<id>/`             | Get a single patient by ID, including medications                           |
+| Full update                               | PUT    | `/api/patients/<id>/`             | Replace all patient fields and medications                                  |
+| Partial update (keep previous meds)       | PATCH  | `/api/patients/<id>/`             | Update patient fields and add new medications without removing old ones     |
+| Partial update (wipe previous meds)       | PATCH  | `/api/patients/<id>/?mode=wipe`  | Update patient fields and replace all medications with the new list         |
+| Delete a patient                          | DELETE | `/api/patients/<id>/`             | Delete the patient and all their medications                                |
+                             |
+
