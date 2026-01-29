@@ -41,5 +41,4 @@ Project is set up with a Django REST framework backend and a js Vite React front
 | Partial update (keep previous meds)       | PATCH  | `/api/patients/<id>/`             | Update patient fields and add new medications without removing old ones     |
 | Partial update (wipe previous meds)       | PATCH  | `/api/patients/<id>/?mode=wipe`  | Update patient fields and replace all medications with the new list         |
 | Delete a patient                          | DELETE | `/api/patients/<id>/`             | Delete the patient and all their medications                                |
-                             |
 
