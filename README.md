@@ -1,6 +1,6 @@
 Project is set up with a Django REST framework backend and a js Vite React frontend.
 
-**Backend Setup (from project root):**
+<h2>Backend Setup (from project root):</h2>
 
     1. Create/Activate the venv
         cd backend
@@ -19,10 +19,11 @@ Project is set up with a Django REST framework backend and a js Vite React front
         python manage.py runserver
         (http://127.0.0.1:8000/api/hello)
 
-    !! React dev server uses proxy in vite.config.js to forward /api requests to Django backend.
-    !! If you change the backend port, the proxy in frontend/vite.config.js must be changed.
+!! React dev server uses proxy in vite.config.js to forward /api requests to Django backend.
 
-**Frontend Setup:**
+!! If you change the backend port, the proxy in frontend/vite.config.js must be changed.
+
+<h2>Frontend Setup:</h2>
 
     1. Install node
         cd frontend
@@ -31,7 +32,8 @@ Project is set up with a Django REST framework backend and a js Vite React front
     2. Run Frontend Server
         (http://localhost:5173/)
 
-**API ENDPOINTS**
+<h2>API Endpoints</h2>
+
 | Action                                  | Method | Endpoint                          | Description                                                                 |
 |----------------------------------------|--------|----------------------------------|-----------------------------------------------------------------------------|
 | List all patients                        | GET    | `/api/patients/`                  | Returns all patients with nested medications                                |
@@ -42,3 +44,8 @@ Project is set up with a Django REST framework backend and a js Vite React front
 | Partial update (wipe previous meds)       | PATCH  | `/api/patients/<id>/?mode=wipe`  | Update patient fields and replace all medications with the new list         |
 | Delete a patient                          | DELETE | `/api/patients/<id>/`             | Delete the patient and all their medications                                |
 
+<h2>Database Seeding</h2>
+
+I used [Faker](https://faker.readthedocs.io/en/master/) in `seed.py` to randomly seed the database with fake patient names, date of births, medications, etc.
+It can be reseeded with `python backend/manage.py` from the root directory.
+***(Script made by ChatGPT).***
