@@ -18,13 +18,22 @@ class Command(BaseCommand):
         self.stdout.write("Seeding patients and medications...")
 
         # Medication templates
-        med_names = ["Amoxicillin", "Ibuprofen", "Paracetamol", "Metformin", "Aspirin", "Lisinopril", "Omeprazole"]
+        med_names = [
+            "Amoxicillin", "Ibuprofen", "Paracetamol", "Metformin", "Aspirin", 
+            "Lisinopril", "Omeprazole", "Atorvastatin", "Simvastatin", "Azithromycin",
+            "Ciprofloxacin", "Levothyroxine", "Prednisone", "Albuterol", "Metoprolol",
+            "Losartan", "Hydrochlorothiazide", "Clindamycin", "Cetirizine", "Furosemide", 
+            "Warfarin", "Gabapentin", "Fluoxetine", "Tramadol",
+            "Doxycycline", "Cefalexin", "Clonazepam", "Ranitidine", "Pantoprazole",
+            "Tamsulosin", "Amlodipine", "Spironolactone", "Meloxicam", "Hydrocortisone",
+            "Lorazepam", "Naproxen", "Allopurinol", "Metronidazole", "Diazepam"
+        ]
         routes = ["oral", "IV", "injection", "topical", "sublingual"]
         dose_options = [50, 100, 200, 250, 500, 750, 1000]
 
         # Create patients
         patients = []
-        for _ in range(100): # NUMBER OF PATIENTS
+        for _ in range(300): # NUMBER OF PATIENTS
             patient = Patient.objects.create(
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
@@ -58,7 +67,7 @@ class Command(BaseCommand):
                         dose_measurement = "mg"
                 
                 route = random.choice(routes)
-                start = fake.date_between(start_date='-2y', end_date='today')
+                start = fake.date_between(start_date='-30y', end_date='-10d')
                 
                 # 20% ongoing
                 if random.random() < 0.2:
