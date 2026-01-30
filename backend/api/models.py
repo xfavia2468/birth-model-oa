@@ -27,7 +27,7 @@ class Medication(models.Model):
     route = models.CharField(max_length=50, null=True, blank=True)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
-    prescribing_facility = models.CharField(max_length=100)
+    prescribing_facility = models.CharField(max_length=100, null=True, blank=True)
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='medications')
 

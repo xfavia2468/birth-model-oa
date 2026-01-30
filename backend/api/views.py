@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Patient, Medication
-from .serializers import PatientSerializer, MedicationSerializer
+from .serializers import PatientSerializer, MedicationSerializer, PatientSearchSerializer
 
 # Tester endpoint
 @api_view(['GET'])
@@ -12,8 +12,28 @@ def hello(request):
 
 # ViewSet for Patient, including custom update logic
 class PatientViewSet(viewsets.ModelViewSet):
-    queryset = Patient.objects.all()
     serializer_class = PatientSerializer
+
+    def get_queryset(self):
+        serializer = PatientSearchSerializer(
+            data=self.request.query_params
+        )
+
+        serializer.is_valid(raise_exception=True)
+        params = serializer.validated_data
+
+        qs = Patient.objects.all()
+
+        if "firstName" in params:
+            qs = qs.filter(first_name__icontains=params["firstName"])
+
+        if "lastName" in params:
+            qs = qs.filter(last_name__icontains=params["lastName"])
+
+        if "dob" in params:
+            qs = qs.filter(date_of_birth=params["dob"])
+
+        return qs
 
     # Override update for custom handling
     def update(self, request, *args, **kwargs):

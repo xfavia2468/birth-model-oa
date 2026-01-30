@@ -2,6 +2,16 @@ from rest_framework import serializers
 from .models import Patient, Medication
 
 
+# Query Validator
+class PatientSearchSerializer(serializers.Serializer):
+    firstName = serializers.CharField(required=False, allow_blank=False)
+    lastName = serializers.CharField(required=False, allow_blank=False)
+    dob = serializers.DateField(
+        required=False,
+        input_formats=["%Y-%m-%d"]
+    )
+
+
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medication
