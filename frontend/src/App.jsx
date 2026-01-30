@@ -18,8 +18,10 @@ function App() {
 	const [searchQuery, setSearchQuery] = useState({});
 	const [selectedData, setSelectedData] = useState(null);
 
+	// SearchBar returns firstName, lastName, dob ... SearchResults does the fetch
 	const handleSearch = (firstName, lastName, dob) => {
 		setSearchQuery({ firstName: firstName, lastName: lastName, dob: dob });
+		console.log("Search query set to:", { firstName, lastName, dob });
 	};
 
 	const handleResultClick = () => {
@@ -30,17 +32,10 @@ function App() {
 		setIsInSearchMode(true);
 	};
 
-	useEffect(() => {
-		fetch("/api/hello")
-			.then((response) => response.json())
-			.then((data) => setMessage(data.status))
-			.catch((error) => console.error("Error fetching message:", error));
-	}, []);
-
 	return (
 		<>
 			<header className="appHeader">
-				<h1>Birth Model OA</h1>
+				<h1>Patient Medication History Lookup</h1>
 			</header>
 			{isInSearhMode ? (
 				<>
