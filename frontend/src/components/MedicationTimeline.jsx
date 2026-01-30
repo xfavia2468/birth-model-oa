@@ -41,78 +41,69 @@ const detectConflicts = (medications, patientBirthDate) => {
 		group.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 
 		for (let i = 0; i < group.length; i++) {
-			const med = group[i];
-			const medStart = new Date(med.start_date);
-			const medEnd = normalizeEndDate(med.end_date);
-
-			// Impossible start date
-			if (birthDate && !isNaN(medStart) && medStart < birthDate) {
-				med.hasConflict = true;
-				if (!med.conflictTypes.includes("Impossible Start Date"))
-					med.conflictTypes.push("Impossible Start Date");
-			}
+			const medA = group[i];
+			const startA = new Date(medA.start_date);
+			const endA = normalizeEndDate(medA.end_date);
 
 			for (let j = i + 1; j < group.length; j++) {
-				const nextMed = group[j];
-				const nextStart = new Date(nextMed.start_date);
-				const nextEnd = normalizeEndDate(nextMed.end_date);
+				const medB = group[j];
+				const startB = new Date(medB.start_date);
+				const endB = normalizeEndDate(medB.end_date);
 
-				// Check overlap for conflicts
-				const overlap =
-					medStart <= nextEnd &&
-					nextStart <= medEnd &&
-					!isNaN(medStart) &&
-					!isNaN(medEnd) &&
-					!isNaN(nextStart) &&
-					!isNaN(nextEnd);
+				// Only compare meds with overlapping dates
+				if (!isNaN(startA) && !isNaN(endA) && !isNaN(startB) && !isNaN(endB)) {
+					const overlap = startA <= endB && startB <= endA;
 
-				if (overlap) {
-					// Conflicts only if overlapping
-					[
-						["Dose", "dose_amount", "dose_measurement"],
-						["Route", "route"],
-						["Prescriber", "prescribing_facility"],
-					].forEach(([label, field1, field2]) => {
-						const aVal = field2 ? med[field1] + med[field2] : med[field1] || "";
-						const bVal = field2
-							? nextMed[field1] + nextMed[field2]
-							: nextMed[field1] || "";
-						if (aVal !== bVal) {
-							med.hasConflict = true;
-							nextMed.hasConflict = true;
-							if (!med.conflictTypes.includes(`${label} Mismatch`))
-								med.conflictTypes.push(`${label} Mismatch`);
-							if (!nextMed.conflictTypes.includes(`${label} Mismatch`))
-								nextMed.conflictTypes.push(`${label} Mismatch`);
-						}
-					});
-					// Date overlap
-					med.hasConflict = true;
-					nextMed.hasConflict = true;
-					if (!med.conflictTypes.includes("Date Overlap"))
-						med.conflictTypes.push("Date Overlap");
-					if (!nextMed.conflictTypes.includes("Date Overlap"))
-						nextMed.conflictTypes.push("Date Overlap");
-				} else {
-					// NON-overlapping sequential changes (only forward med gets change)
-					[
-						["Dose", "dose_amount", "dose_measurement"],
-						["Route", "route"],
-						["Prescriber", "prescribing_facility"],
-					].forEach(([label, field1, field2]) => {
-						const prevVal = field2
-							? med[field1] + med[field2]
-							: med[field1] || "";
-						const currVal = field2
-							? nextMed[field1] + nextMed[field2]
-							: nextMed[field1] || "";
-						if (
-							prevVal !== currVal &&
-							!nextMed.changes.includes(`${label} Changed`)
-						) {
-							nextMed.changes.push(`${label} Changed`);
-						}
-					});
+					if (overlap) {
+						medA.hasConflict = true;
+						medB.hasConflict = true;
+
+						// Date overlap
+						if (!medA.conflictTypes.includes("Date Overlap"))
+							medA.conflictTypes.push("Date Overlap");
+						if (!medB.conflictTypes.includes("Date Overlap"))
+							medB.conflictTypes.push("Date Overlap");
+
+						// Dose, Route, Prescriber
+						[
+							["Dose", "dose_amount", "dose_measurement"],
+							["Route", "route"],
+							["Prescriber", "prescribing_facility"],
+						].forEach(([label, f1, f2]) => {
+							const valA = f2
+								? `${medA[f1] || ""}${medA[f2] || ""}`
+								: medA[f1] || "";
+							const valB = f2
+								? `${medB[f1] || ""}${medB[f2] || ""}`
+								: medB[f1] || "";
+							if (valA !== valB) {
+								if (!medA.conflictTypes.includes(`${label} Mismatch`))
+									medA.conflictTypes.push(`${label} Mismatch`);
+								if (!medB.conflictTypes.includes(`${label} Mismatch`))
+									medB.conflictTypes.push(`${label} Mismatch`);
+							}
+						});
+					} else {
+						// Sequential changes: only mark the later med
+						[
+							["Dose", "dose_amount", "dose_measurement"],
+							["Route", "route"],
+							["Prescriber", "prescribing_facility"],
+						].forEach(([label, f1, f2]) => {
+							const prevVal = f2
+								? `${medA[f1] || ""}${medA[f2] || ""}`
+								: medA[f1] || "";
+							const currVal = f2
+								? `${medB[f1] || ""}${medB[f2] || ""}`
+								: medB[f1] || "";
+							if (
+								prevVal !== currVal &&
+								!medB.changes.includes(`${label} Changed`)
+							) {
+								medB.changes.push(`${label} Changed`);
+							}
+						});
+					}
 				}
 			}
 		}
