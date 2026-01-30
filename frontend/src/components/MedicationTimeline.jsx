@@ -5,6 +5,7 @@ import {
 	TimelineConnector,
 	TimelineContent,
 	TimelineDot,
+	timelineItemClasses,
 } from "@mui/lab";
 import { Box, Typography, Chip } from "@mui/material";
 
@@ -139,7 +140,15 @@ function MedicationTimeline({ medications, patientBirthDate }) {
 	});
 
 	return (
-		<Timeline position="right">
+		<Timeline
+			position="right"
+			sx={{
+				[`& .${timelineItemClasses.root}:before`]: {
+					flex: 0,
+					padding: 0,
+				},
+			}}
+		>
 			{sorted.map((med, index) => {
 				const name = med?.name?.trim() || "Unnamed medication";
 

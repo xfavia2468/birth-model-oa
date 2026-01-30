@@ -13,7 +13,7 @@ function PatientView({ data, onBack }) {
 					marginTop: "2em",
 				}}
 			>
-				<Box sx={{ flex: 1 }}>
+				<Box sx={{ flex: 2 }}>
 					<Button
 						variant="contained"
 						onClick={onBack}
