@@ -25,6 +25,7 @@ function App() {
 	};
 
 	const handleResultClick = (data) => {
+		window.scrollTo(0, 0);
 		setSelectedData(data);
 		setIsInSearchMode(false);
 	};
