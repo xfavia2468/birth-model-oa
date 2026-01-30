@@ -24,7 +24,8 @@ function App() {
 		console.log("Search query set to:", { firstName, lastName, dob });
 	};
 
-	const handleResultClick = () => {
+	const handleResultClick = (data) => {
+		setSelectedData(data);
 		setIsInSearchMode(false);
 	};
 
