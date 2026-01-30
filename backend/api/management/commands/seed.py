@@ -48,7 +48,15 @@ class Command(BaseCommand):
                 if random.random() < 0.05:
                     dose_amount = None
 
-                dose_measurement = "mg" if dose_amount else None
+                dose_measurement = "mg" 
+                # Randomly leave measurement blank
+                if dose_amount:
+                    if random.random() < 0.05:
+                        dose_measurement = None
+                else:
+                    if random.random() < 0.15:
+                        dose_measurement = "mg"
+                
                 route = random.choice(routes)
                 start = fake.date_between(start_date='-2y', end_date='today')
                 
