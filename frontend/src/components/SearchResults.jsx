@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Box, Paper, Typography, Button, Stack } from "@mui/material";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function SearchResults({ query, onClick }) {
 	const [results, setResults] = useState([]);
@@ -18,7 +19,9 @@ function SearchResults({ query, onClick }) {
 			if (query.lastName) params.append("lastName", query.lastName);
 			if (query.dob) params.append("dob", query.dob);
 
-			const response = await fetch(`/api/patients?${params.toString()}`);
+			const response = await fetch(
+				`${API_URL}/api/patients?${params.toString()}`,
+			);
 			const data = await response.json();
 			setResults((prev) => (reset ? data.results : [...prev, ...data.results]));
 
